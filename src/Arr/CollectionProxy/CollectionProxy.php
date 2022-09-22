@@ -21,9 +21,7 @@ class CollectionProxy extends Arr {
      * @return $this
      */
     public function setWatch(string $key, array|\Closure|WatchInterface $watch): CollectionProxy {
-        $this->watch[$key] = $watch instanceof \Closure || $watch instanceof WatchInterface ? [
-            'handle' => $watch
-        ] : $watch;
+        $this->watch[$key] =  !is_array($watch) ? [ 'handle' => $watch ] : $watch;
         return $this;
     }
 

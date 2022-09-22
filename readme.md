@@ -37,7 +37,7 @@ $watch -> setWatch('info.query.user', function ($newValue) {
 
 // 如果定义了监听事件 info.query.user 那么 修改 user 值时
 // info 监听事件不会触发 如果定义的 对调 handle 为 class 那么需实现
-// iflow\Helper\Arr\CollectionProxy\interfaces、WatchInterface 接口
+// iflow\Helper\Arr\CollectionProxy\interfaces\WatchInterface 接口
 $watch -> setWatch('info', [
     'handle' => function ($newValue) {
         var_dump("这是监听回调 ：\n 最新值为：");
