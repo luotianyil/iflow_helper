@@ -17,9 +17,6 @@
     "autoload": {
         "psr-4": {
             "iflow\\Helper\\": "src"
-        },
-        "files": [
-            "src/helper.php"
-        ]
+        }
     }
 }

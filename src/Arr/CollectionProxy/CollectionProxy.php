@@ -60,7 +60,10 @@ class CollectionProxy extends Arr {
 
         if ($handle instanceof \Closure) return $handle($newValue, $oldValue, $offset, $allValue);
 
-        $object = is_object($handle) ? $handle : app($handle);
+        $object = is_object($handle) ? $handle : (
+            function_exists('app') ? app($handle) : new $handle
+        );
+
         if (!$object instanceof WatchInterface) throw new WatchHandleNonException('WatchHandle give WatchInterfaceType ?');
         return $object -> handle($newValue, $oldValue, $offset, $allValue);
     }
