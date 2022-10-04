@@ -17,7 +17,7 @@ class Str {
      * @param bool $trim
      * @return string
      */
-    public static function genUuid(bool $trim): string {
+    public static function genUuid(bool $trim = true): string {
         // Windows
         if (function_exists('com_create_guid') === true) {
             return $trim === true ? trim(com_create_guid(), '{}') : com_create_guid();

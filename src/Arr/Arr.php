@@ -46,7 +46,7 @@ class Arr extends Collection {
         return empty($array[$key]) ? null: $this->getDeepValue($names, $array[$key]);
     }
 
-    public function offsetSet(mixed $offset, mixed $value) {
+    public function offsetSet(mixed $offset, mixed $value): mixed {
         $offset = is_string($offset) ? explode('.', $offset) : [ $offset ];
         $pKey = array_shift($offset);
 

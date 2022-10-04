@@ -17,7 +17,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonS
 
     public function offsetExists(mixed $offset): bool {
         // TODO: Implement offsetExists() method.
-        return isset($this->items[$offset]) || !empty($this->items[$offset]);
+        return array_key_exists($offset, $this->items);
     }
 
     public function offsetGet(mixed $offset): mixed {
@@ -26,7 +26,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonS
     }
 
     #[ReturnTypeWillChange]
-    public function offsetSet(mixed $offset, mixed $value) {
+    public function offsetSet(mixed $offset, mixed $value): mixed {
         // TODO: Implement offsetSet() method.
         if (is_null($offset)) {
             return $this->items[] = $value;
