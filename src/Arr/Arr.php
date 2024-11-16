@@ -17,13 +17,15 @@ class Arr extends Collection {
         if (!$this->offsetExists($keys[0])) return $default;
 
         if (empty($keys[1])) return $this->offsetGet($keys[0]) ?? $default;
+
+        // 按.拆分成数组进行判断
         $names = explode('.', $keys[1]);
 
         $info = count($names) <= 1
             ? ($this->items[$keys[0]][$names[0]] ?? [])
             : $this->getDeepValue($names, $this->offsetGet($keys[0]));
 
-        return !empty($info) ? $info : $default;
+        return $info ?? $default;
     }
 
     /**
@@ -33,12 +35,13 @@ class Arr extends Collection {
      * @return array|mixed|null
      */
     protected function getDeepValue(mixed $names, array $array = []): mixed {
-        // 按.拆分成数组进行判断
         if (count($names) === 1) {
-            return $array[array_shift($names)] ?: [];
+            $key = array_shift($names);
+            return array_key_exists($key, $array) ? $array[$key] : [];
         }
+
         $key = array_shift($names);
-        return empty($array[$key]) ? null: $this->getDeepValue($names, $array[$key]);
+        return array_key_exists($key, $array) ? $this->getDeepValue($names, $array[$key]) : null;
     }
 
     public function offsetSet(mixed $offset, mixed $value): mixed {
