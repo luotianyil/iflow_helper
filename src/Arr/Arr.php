@@ -12,21 +12,16 @@ class Arr extends Collection {
      */
     public function get(string $name = '', mixed $default = []): mixed {
         if ($name === '') return $this->items;
-        $keys = explode('@', $name);
+        $keys    = explode('@', $name);
 
-        if (!$this->offsetExists($keys[0])) return [];
+        if (!$this->offsetExists($keys[0])) return $default;
+
         if (empty($keys[1])) return $this->offsetGet($keys[0]) ?? $default;
         $names = explode('.', $keys[1]);
 
-        $info = [];
-        if (count($names) <= 1) {
-            foreach ($names as $val) {
-                $info = $this->items[$keys[0]][$val] ?? [];
-                if ($info) return $info;
-            }
-        } else {
-            $info = $this->getDeepValue($names, $this->offsetGet($keys[0]));
-        }
+        $info = count($names) <= 1
+            ? ($this->items[$keys[0]][$names[0]] ?? [])
+            : $this->getDeepValue($names, $this->offsetGet($keys[0]));
 
         return !empty($info) ? $info : $default;
     }
@@ -50,7 +45,7 @@ class Arr extends Collection {
         $offset = is_string($offset) ? explode('.', $offset) : [ $offset ];
         $pKey = array_shift($offset);
 
-        if (count($offset) > 1) {
+        if (count($offset) > 0) {
             $oldValue = $this->offsetGet($pKey);
             $value = $this->setDeepValue($offset, $oldValue, $value);
         }
@@ -65,21 +60,14 @@ class Arr extends Collection {
      * @return mixed
      */
     protected function setDeepValue(mixed $offset, mixed $oldValue, mixed $newValue): mixed {
-
-        if (count($offset) <= 1) {
-            $oldValue[array_shift($offset)] = $newValue;
+        $key = array_shift($offset);
+        if (count($offset) === 0) {
+            $oldValue[$key] = $newValue;
             return $oldValue;
         }
 
-        foreach ($offset as $key) {
-            if (!isset($oldValue[$key])) continue;
-
-            array_shift($offset);
-            if (count($offset) > 0)
-                $oldValue[$key] = $this->setDeepValue($offset ?: [], $oldValue[$key], $newValue);
-            else $oldValue[$key] = $newValue;
-        }
-
+        if (empty($oldValue[$key])) $oldValue[$key] = [];
+        $oldValue[$key] = $this->setDeepValue($offset ?: [], $oldValue[$key], $newValue);
         return $oldValue;
     }
 
