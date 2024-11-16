@@ -21,27 +21,26 @@ class Arr extends Collection {
         // 按.拆分成数组进行判断
         $names = explode('.', $keys[1]);
 
-        $info = count($names) <= 1
-            ? ($this->items[$keys[0]][$names[0]] ?? [])
-            : $this->getDeepValue($names, $this->offsetGet($keys[0]));
-
-        return $info ?? $default;
+        return count($names) <= 1
+            ? ($this->items[$keys[0]][$names[0]] ?? $default)
+            : $this->getDeepValue($names, $this->offsetGet($keys[0]), $default);
     }
 
     /**
      * 获取深度值
      * @param mixed $names
      * @param array $array
+     * @param mixed $default
      * @return array|mixed|null
      */
-    protected function getDeepValue(mixed $names, array $array = []): mixed {
+    protected function getDeepValue(mixed $names, array $array = [], mixed $default = []): mixed {
         if (count($names) === 1) {
             $key = array_shift($names);
-            return array_key_exists($key, $array) ? $array[$key] : [];
+            return array_key_exists($key, $array) ? $array[$key] : $default;
         }
 
         $key = array_shift($names);
-        return array_key_exists($key, $array) ? $this->getDeepValue($names, $array[$key]) : null;
+        return array_key_exists($key, $array) ? $this->getDeepValue($names, $array[$key]) : $default;
     }
 
     public function offsetSet(mixed $offset, mixed $value): mixed {
