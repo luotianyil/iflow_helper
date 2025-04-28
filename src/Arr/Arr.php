@@ -20,7 +20,6 @@ class Arr extends Collection {
 
         // 按.拆分成数组进行判断
         $names = explode('.', $keys[1]);
-
         return count($names) <= 1
             ? ($this->items[$keys[0]][$names[0]] ?? $default)
             : $this->getDeepValue($names, $this->offsetGet($keys[0]), $default);
@@ -29,17 +28,20 @@ class Arr extends Collection {
     /**
      * 获取深度值
      * @param mixed $names
-     * @param array $array
+     * @param mixed $array
      * @param mixed $default
      * @return array|mixed|null
      */
-    protected function getDeepValue(mixed $names, array $array = [], mixed $default = []): mixed {
+    protected function getDeepValue(mixed $names, mixed $array = [], mixed $default = []): mixed {
         if (count($names) === 1) {
             $key = array_shift($names);
             return array_key_exists($key, $array) ? $array[$key] : $default;
         }
 
         $key = array_shift($names);
+        if (count($names) >= 1 && !is_array($array[$key])) {
+            return $default;
+        }
         return array_key_exists($key, $array) ? $this->getDeepValue($names, $array[$key]) : $default;
     }
 

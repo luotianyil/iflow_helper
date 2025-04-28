@@ -96,7 +96,7 @@ class Str {
      * @return string
      */
     public static function genSnowFlake(string $prefix = '', string $nsCode = '', string $serviceId = ''): string {
-        if (static::$snowFlake === null) self::$snowFlake = new SnowFlake();
+        static::$snowFlake ??= new SnowFlake();
         return self::$snowFlake -> genSnowFlake($prefix, $nsCode, $serviceId);
     }
 
